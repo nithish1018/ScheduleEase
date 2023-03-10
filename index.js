@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const app = require("./app");
 // eslint-disable-next-line no-undef
 app.listen(process.env.PORT || 3000, () => {
