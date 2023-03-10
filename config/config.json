@@ -1,0 +1,20 @@
+{
+  "development": {
+    "username": "postgres",
+    "password": "1018",
+    "database": "GDCTaskDB",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "postgres",
+    "password": "1018",
+    "database": "GDCTaskDB",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "production": {
+    "use_env_variable": "DATABASE_URL",
+    "dialect": "postgres"
+  }
+}
