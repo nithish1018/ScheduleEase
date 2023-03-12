@@ -10,6 +10,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.1.0",
+    "connect-ensure-login": "^0.1.1",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "^1.4.6",
     "ejs": "^3.1.8",
     "express": "^4.18.2",
     "express-session": "^1.17.3",
@@ -19,9 +23,13 @@
     "sequelize": "^6.29.3"
   },
   "devDependencies": {
+    "cheerio": "^1.0.0-rc.12",
     "eslint": "^8.35.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.0",
     "nodemon": "^2.0.21",
     "prettier": "^2.8.4",
-    "sequelize-cli": "^6.6.0"
+    "sequelize-cli": "^6.6.0",
+    "tiny-csrf": "^1.1.3"
   }
 }
