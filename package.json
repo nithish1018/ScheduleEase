@@ -5,7 +5,14 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon -e ejs,js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky install"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint",
+      "prettier --write ."
+    ]
   },
   "author": "",
   "license": "ISC",
