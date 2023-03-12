@@ -9,14 +9,20 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      taskName: {
-        type: Sequelize.STRING
+      appointmentName: {
+        type: Sequelize.STRING,
+        allowNull:false,
+        validate:{
+          len:5
+        }
       },
       start: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        allowNull:false,
       },
       end: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        allowNull:false
       },
       createdAt: {
         allowNull: false,

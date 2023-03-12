@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="<%= csrfToken %>">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title> <%= title %> </title>
+
+</head>
+<body>
+            <%- include('header.ejs') %> 
+            <div class="relative flex min-h-screen flex-col justify-center overflow-hidden py-6">
+                <div class="relative mx-auto mb-8 w-fit">
+                    <br> <% if(messages && messages.error && messages.error.length > 0)  { %>
+                       <% for(var i=0; i<messages.error.length; i++) { %>
+                             <br>  <li class="text-white rounded px-40 py-4 bg-red-500"> <%= messages.error[i] %></li>
+                       <% } %>
+                     <% } %>
+                  </div>
+                <div class="relative bg-gray-200 px-6 pb-5 shadow-xl ring-1 ring-gray-900/5 sm:mx-auto sm:max-w-lg sm:rounded-lg sm:px-10">
+                    <div class="mx-auto max-w-md">
+                        <h2 class="text-2xl  text-center font-bold my-5"> Login To Your Account
+                            
+                        </h2>
+                       
+                        <div class="divide-y  divide-gray-300/50">
+                            <div class="space-y-6 text-base leading-7 text-ray-600">
+                                <form action="/login" method="post">
+                                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                    <label for="email" class="text-md w-40 inline-block font-medium leading-5 text-gray-700">
+                                       Email
+                                    </label>
+                                    <input required type="email" id="name" name="email" class="bg-gray-100 inline-block rounded-lg shadow-md py-3 px-4 mb-5 text-base leading-6 placeolder-gray-500" placeholder="Enter Email" required><br/>
+                                    <label for="password" class="text-md w-40 inline-block font-medium leading-3 text-gray-700">Password</label>
+                                    <input required type="password" id="password" name="password" class="bg-gray-100 inline-block rounded-lg shadow-md py-3 px-4 mb-5 text-base leading-6 placeolder-gray-500" placeholder="Enter Password"><br/>
+                                    <button type="submit" id="submit" class="w-fit rounded-lg shadow-lg px-5 py-3 bg-green-500 text-white hover:bg-green-400 focus:outline-none focus block">Submit</button>
+                                    
+                                </form>
+        
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</body>
+</html>

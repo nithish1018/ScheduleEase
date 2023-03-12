@@ -92,5 +92,64 @@ passport.serializeUser((user, done) => {
         csrfToken:request.csrfToken(),
     });
   });
+  app.get("/login",async(request,response)=>{
+    response.render("login",{
+        title:"Sign In",
+        csrfToken:request.csrfToken(),
+    });
+  });
+  app.post("/newaccount", async (request, response) => {
+    if (request.body.firstName == false) {
+      request.flash("error", "Please Enter Your First Name");
+      return response.redirect("/signup");
+    }
+    if (request.body.lastName == false) {
+      request.flash("error", "Please Enter Your Last Name");
+      return response.redirect("/signup");
+    }
+    if (request.body.password == false) {
+      request.flash("error", "Please Enter Password");
+      return response.redirect("/signup");
+    }
+    if (request.body.password.length < 8) {
+      request.flash(
+        "error",
+        "Password length should be atleast of 8 characters!"
+      );
+      return response.redirect("/signup");
+    }
+    const hashedPwd = await bcrypt.hash(request.body.password, saltRounds);
+    console.log(hashedPwd);
+    try {
+      const user = await User.create({
+        firstName: request.body.firstName,
+        lastName: request.body.lastName,
+        email: request.body.email,
+        password: hashedPwd,
+      });
+      request.login(user, (err) => {
+        if (err) {
+          console.log(err);
+          response.redirect("/");
+        } else {
+          response.redirect("/tasks");
+        }
+      });
+    } catch (error) {
+      request.flash("error", error.message);
+      return response.redirect("/signup");
+    }
+  });
+  app.post(
+    "/login",
+    passport.authenticate("local", {
+      failureRedirect: "/login",
+      failureFlash: true,
+    }),
+    (request, response) => {
+      console.log(request.user);
+      response.redirect("/tasks");
+    }
+  );
 // eslint-disable-next-line no-undef
 module.exports = app;
