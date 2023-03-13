@@ -51,7 +51,7 @@ module.exports = (sequelize, DataTypes) => {
         },
       });
     }
-    static async updateAppointment(appointmentName, id) {
+    static async updateAppointment({ appointmentName, id }) {
       return this.update(
         {
           appointmentName: appointmentName,

@@ -281,11 +281,13 @@ app.post(
   connectEnsureLogin.ensureLoggedIn(),
   async (request, response) => {
     {
+      console.log(request.params.appointmentId + "hggsggggssssss");
+      console.log(request.params.userId + "heduhweohdioh");
       try {
-        const appointment = await Appointment.findAppointment(
-          request.params.appointmentId,
-          request.params.userId
-        );
+        // const appointment = await Appointment.findAppointment(
+        //   request.params.appointmentId,
+        //   request.params.userId
+        // );
         const updatedAppointment = await Appointment.updateAppointment({
           appointmentName: request.body.appointment,
           id: request.params.appointmentId,
