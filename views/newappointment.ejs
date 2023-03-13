@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="<%= csrfToken %>">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title> <%= title %> </title>
+</head>
+<body>
+    <div class="relative bg-gray-200 px-6 pb-5 shadow-xl ring-1 ring-gray-900/5 sm:mx-auto sm:max-w-lg sm:rounded-lg sm:px-10">
+        <div class="mx-auto max-w-md">
+            <h2 class="text-2xl  text-center font-bold my-5">Add New Appointment
+                
+            </h2>
+           
+            <div class="divide-y  divide-gray-300/50">
+                <div class="space-y-6 text-base leading-7 text-ray-600">
+                    <form action="/appointments/new" method="post">
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                        <label for="appointment" class="text-md w-40 inline-block font-medium leading-5 text-gray-700">
+                           Enter Appointment Name
+                        </label>
+                        <input required type="text" id="appointment" name="appointment" class="bg-gray-100 inline-block rounded-lg shadow-md py-3 px-4 mb-5 text-base leading-6 placeolder-gray-500" placeholder="Enter Appointment" required><br/>
+                        <label for="start" class="text-md w-40 inline-block font-medium leading-3 text-gray-700">Start Time</label>
+                        <input required type="datetime-local" id="start" name="start" class="bg-gray-100 inline-block rounded-lg shadow-md py-3 px-4 mb-5 text-base leading-6 placeolder-gray-500" placeholder="start Time"><br/>
+                        <label for="end" class="text-md w-40 inline-block font-medium leading-3 text-gray-700">End Time</label>
+                        <input required type="datetime-local" id="end" name="end" class="bg-gray-100 inline-block rounded-lg shadow-md py-3 px-4 mb-5 text-base leading-6 placeolder-gray-500" placeholder="End Time"><br/>
+                        <button type="submit" id="submit" class="w-fit rounded-lg shadow-lg px-5 py-3 bg-green-500 text-white hover:bg-green-400 focus:outline-none focus block">Add Appointment</button>
+                        
+                    </form>
+
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</body>
+</html>

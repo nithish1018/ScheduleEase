@@ -155,7 +155,152 @@ app.get(
   "/tasks",
   connectEnsureLogin.ensureLoggedIn(),
   async (request, response) => {
-    response.render("tasks");
+    try {
+      const userId = request.user.id;
+      const allAppointments = await Appointment.allAppointments(userId);
+      const appointmentsCount = allAppointments.length;
+      const firstName = request.user.firstName;
+      const lastName = request.user.lastName;
+      const userName = firstName + " " + lastName;
+
+      if (request.accepts("html")) {
+        response.render("tasks", {
+          title: "User Appointments",
+          allAppointments,
+          appointmentsCount,
+          userName,
+          csrfToken: request.csrfToken(),
+        });
+      } else {
+        response.json({
+          allAppointments,
+          tasksCount,
+          userName,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      return response.status(422).json(error);
+    }
+  }
+);
+app.get(
+  "/appointment/new",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (request, response) => {
+    response.render("newappointment", {
+      title: "New Appointment",
+      csrfToken: request.csrfToken(),
+    });
+  }
+);
+app.post(
+  "/appointments/new",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (request, response) => {
+    if (request.body.appointment.length < 5) {
+      request.flash("error", "Length of the Appointment Should be atleast 5");
+      return response.redirect("/tasks");
+    }
+    let startTime = request.body.start;
+    if (startTime == false) {
+      request.flash("error", "Please choose start time");
+      return response.redirect("/tasks");
+    }
+    let endTime = request.body.end;
+    if (endTime == false) {
+      request.flash("error", "Please choose end time");
+      return response.redirect("/tasks");
+    }
+    if (endTime < startTime) {
+      request.flash("error", "End time cannot be before Start time");
+      request.flash("error", "Please Try Again");
+      return response.redirect("/tasks");
+    }
+    const userId = request.user.id;
+    try {
+      let allAppointments = await Appointment.allAppointments(userId);
+      // const allTimes=await Appointment.allTimes(userId);
+      // console.log(allTimes + "weghfuehuifhueiufgeigi")
+      // console.log(allTimes[0].start + "weghfuehuifhueiufgeigi")
+      const alreadyOccupied = await Appointment.checkSlot({
+        start: startTime,
+        end: endTime,
+      });
+
+      if (!alreadyOccupied) {
+        const thisAppointment = await Appointment.addAppointment({
+          appointmentName: request.body.appointment,
+          userId: request.user.id,
+          start: request.body.start,
+          end: request.body.end,
+        });
+        return response.redirect("/tasks");
+      } else {
+        console.log(alreadyOccupied + "shhhhhhhhhhhhhhhhhh");
+        request.flash(
+          "error",
+          "Two Appointments are overlapping, please choose different periods"
+        );
+        return response.redirect("/tasks");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+app.get(
+  "/appointment/:id/edit",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (request, response) => {
+    let userId = request.user.id;
+    let appointmentId = request.params.id;
+    const appointment = await Appointment.findAppointment({
+      id: appointmentId,
+      userId,
+    });
+    try {
+      if (request.accepts("html")) {
+        response.render("editAppointment", {
+          appointmentName: appointment.appointmentName,
+          id: appointmentId,
+          userId: request.user.id,
+          csrfToken: request.csrfToken(),
+        });
+      } else {
+        response.json(appointment);
+      }
+    } catch (error) {
+      console.log(error);
+      return response.status(422).json(error);
+    }
+  }
+);
+app.put(
+  "/appointment/:appointmentId/:userId/edit",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (request, response) => {
+    if (request.user) {
+      try {
+        const appointment = await Appointment.findAppointment(
+          request.params.appointmentId,
+          request.params.userId
+        );
+        if (request.user.id !== appointment.userId) {
+          return response.json({
+            error: "Invalid User Id ID",
+          });
+        }
+        const updatedAppointment = await Appointment.updateAppointment({
+          appointmentName: request.body.appointment,
+          id: request.params.appointmentId,
+        });
+        return response.json(updatedAppointment);
+      } catch (error) {
+        console.log(error);
+        return response.status(422).json(error);
+      }
+    }
   }
 );
 // eslint-disable-next-line no-undef

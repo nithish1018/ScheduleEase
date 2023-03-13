@@ -13,6 +13,57 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "userId",
       });
     }
+    static allAppointments(userId) {
+      return this.findAll({
+        where: {
+          userId,
+        },
+        order: [["id", "ASC"]],
+      });
+    }
+    static checkSlot({ start, end }) {
+      return this.findOne({
+        where: {
+          start,
+          end,
+        },
+      });
+    }
+    static findAppointment({ id, userId }) {
+      return this.findOne({
+        where: {
+          id,
+          userId,
+        },
+      });
+    }
+    static async updateAppointment(appointmentName, id) {
+      return this.update(
+        {
+          appointmentName: appointmentName,
+        },
+        {
+          where: {
+            id: id,
+          },
+        }
+      );
+    }
+
+    static addAppointment({ appointmentName, userId, start, end }) {
+      return this.create({
+        appointmentName,
+        userId,
+        start,
+        end,
+      });
+    }
+    static allTimes(userId) {
+      return this.findAll({
+        where: userId,
+        attributes: ["start", "end"],
+      });
+    }
   }
   Appointment.init(
     {
