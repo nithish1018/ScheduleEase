@@ -220,9 +220,6 @@ app.post(
     const userId = request.user.id;
     try {
       let allAppointments = await Appointment.allAppointments(userId);
-      // const allTimes=await Appointment.allTimes(userId);
-      // console.log(allTimes + "weghfuehuifhueiufgeigi")
-      // console.log(allTimes[0].start + "weghfuehuifhueiufgeigi")
       const alreadyOccupied = await Appointment.checkSlot({
         start: startTime,
         end: endTime,
@@ -284,10 +281,6 @@ app.post(
       console.log(request.params.appointmentId + "hggsggggssssss");
       console.log(request.params.userId + "heduhweohdioh");
       try {
-        // const appointment = await Appointment.findAppointment(
-        //   request.params.appointmentId,
-        //   request.params.userId
-        // );
         const updatedAppointment = await Appointment.updateAppointment({
           appointmentName: request.body.appointment,
           id: request.params.appointmentId,
