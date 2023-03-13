@@ -263,7 +263,7 @@ app.get(
       if (request.accepts("html")) {
         response.render("editAppointment", {
           appointmentName: appointment.appointmentName,
-          id: appointmentId,
+          id: request.params.id,
           userId: request.user.id,
           csrfToken: request.csrfToken(),
         });
@@ -276,26 +276,43 @@ app.get(
     }
   }
 );
-app.put(
-  "/appointment/:appointmentId/:userId/edit",
+app.post(
+  "/appointments/:appointmentId/:userId/edit",
   connectEnsureLogin.ensureLoggedIn(),
   async (request, response) => {
-    if (request.user) {
+    {
       try {
         const appointment = await Appointment.findAppointment(
           request.params.appointmentId,
           request.params.userId
         );
-        if (request.user.id !== appointment.userId) {
-          return response.json({
-            error: "Invalid User Id ID",
-          });
-        }
         const updatedAppointment = await Appointment.updateAppointment({
           appointmentName: request.body.appointment,
           id: request.params.appointmentId,
         });
-        return response.json(updatedAppointment);
+        if (updatedAppointment) {
+          return response.redirect("/tasks");
+        }
+      } catch (error) {
+        console.log(error);
+        return response.status(422).json(error);
+      }
+    }
+  }
+);
+app.delete(
+  "/appointments/:id/delete",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (request, response) => {
+    {
+      try {
+        const appointment = await Appointment.findAppointmentWithId(
+          request.params.id
+        );
+        const deletedAppointment = await Appointment.deleteAppointment(
+          request.params.id
+        );
+        return response.json({ success: deletedAppointment === 1 });
       } catch (error) {
         console.log(error);
         return response.status(422).json(error);

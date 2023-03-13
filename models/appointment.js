@@ -37,6 +37,20 @@ module.exports = (sequelize, DataTypes) => {
         },
       });
     }
+    static findAppointmentWithId(id) {
+      return this.findOne({
+        where: {
+          id,
+        },
+      });
+    }
+    static deleteAppointment(id) {
+      return this.destroy({
+        where: {
+          id,
+        },
+      });
+    }
     static async updateAppointment(appointmentName, id) {
       return this.update(
         {
