@@ -37,6 +37,20 @@
            <% } %>
          <% } %>
       </div>
+      <div class="relative mx-auto mb-8 w-fit">
+        <% if(messages && messages.success && messages.success.length > 0)  { %>
+           <% for(var i=0; i<messages.success.length; i++) { %>
+                <br>   <li class="text-white rounded px-40 py-4 bg-green-500"> <%= messages.success[i] %></li>
+           <% } %>
+         <% } %>
+      </div>
+      <h3 class="px-3 py-5 text-2xl text-red-600"> Hello, <%= userName %> </h3>
+      <div class="px-3 flex gap-4  items-center">
+      <a  class="text-xl bg-green-500 text-white rounded px-2" href="/home">Home </a>
+      <a class="text-xl bg-red-500 text-white rounded px-2" href="/signout">Sign Out</a>
+      <a class="text-xl bg-green-500 text-white rounded px-2" href="/user/passwordReset">Reset Password</a>
+
+    </div>
            
                   <% if (appointmentsCount==0) { %>
                     <h3 class="px-4 text-xl text-red-400"> You have zero appointments</h3>

@@ -98,6 +98,17 @@ app.get("/login", async (request, response) => {
     csrfToken: request.csrfToken(),
   });
 });
+app.get("/signout", (request, response, next) => {
+  request.logout((err) => {
+    if (err) {
+      return next(err);
+    }
+    response.redirect("/");
+  });
+});
+app.get("/home", async (request, response) => {
+  return response.redirect("/");
+});
 app.post("/newaccount", async (request, response) => {
   if (request.body.firstName == false) {
     request.flash("error", "Please Enter Your First Name");
@@ -311,6 +322,73 @@ app.delete(
       } catch (error) {
         console.log(error);
         return response.status(422).json(error);
+      }
+    }
+  }
+);
+app.get(
+  "/user/passwordReset",
+  connectEnsureLogin.ensureLoggedIn(),
+  (request, response) => {
+    if (request.user) {
+      response.render("PasswordReset", {
+        csrfToken: request.csrfToken(),
+      });
+    }
+  }
+);
+app.post(
+  "/user/passwordReset",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (request, response) => {
+    if (request.user) {
+      if (!request.body.oldpassword) {
+        request.flash("error", "Old Password Field Cannot Be Empty");
+        return response.redirect("/user/passwordReset");
+      }
+      if (!request.body.newpassword) {
+        request.flash("error", "New Password Field Cannot Be Empty");
+        return response.redirect("/user/passwordReset");
+      }
+      if (request.body.newpassword.length < 8) {
+        request.flash("error", "Password length should be atleast 8");
+        return response.redirect("/user/passwordReset");
+      }
+      const res = await bcrypt.compare(
+        request.body.newpassword,
+        request.user.password
+      );
+      if (res) {
+        request.flash(
+          "error",
+          "New password cannot be same as existing password"
+        );
+        return response.redirect("/user/passwordReset");
+      }
+      const hashedNewPwd = await bcrypt.hash(
+        request.body.newpassword,
+        saltRounds
+      );
+      const result = await bcrypt.compare(
+        request.body.oldpassword,
+        request.user.password
+      );
+      if (result) {
+        try {
+          User.findOne({ where: { email: request.user.email } }).then(
+            (user) => {
+              user.resetPassword(hashedNewPwd);
+            }
+          );
+          request.flash("success", "Password changed successfully");
+          return response.redirect("/tasks");
+        } catch (error) {
+          console.log(error);
+          return response.status(422).json(error);
+        }
+      } else {
+        request.flash("error", "Incorrect Old Password");
+        return response.redirect("/user/passwordReset");
       }
     }
   }
