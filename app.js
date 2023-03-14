@@ -285,16 +285,6 @@ app.post(
           );
           return response.redirect(`/tasks/${allAppointments[i].id}`);
         }
-
-        // if(isOverlap){
-        //   let overlaped=time.id;
-        //   request.flash(
-        //     "error",
-        //     "Two Appointments are overlapping,Edit the below appointment"
-        //   );
-        //   console.log(time.id + "wherfwbebkhwb")
-        //   return response.redirect(`/tasks/${time.id}`);
-        // }
       }
 
       if (!alreadyOccupied) {
@@ -359,6 +349,51 @@ app.post(
       if (request.body.start > request.body.end) {
         request.flash("error", "End time cannot be before Start time");
         return response.redirect(`/tasks/${request.params.id}`);
+      }
+      let allAppointments = await Appointment.allAppointments(userId);
+      const alreadyOccupied = await Appointment.checkSlot({
+        start: startTime,
+        end: endTime,
+      });
+      let newStart = request.body.start;
+      let newEnd = request.body.end;
+      let startSec = new Date(newStart).getTime() / 1000;
+      let endSec = new Date(newEnd).getTime() / 1000;
+      console.log(startSec + "wekjndjwknenkdj");
+      let overlay = false;
+      for (let i = 0; i < allAppointments.length; i++) {
+        console.log(allAppointments[0].start + "ebkhbdewbk");
+        let checkStart = new Date(allAppointments[i].start).getTime() / 1000;
+        let checkEnd = new Date(allAppointments[i].end).getTime() / 1000;
+        if (checkStart <= newStart <= checkEnd) {
+          overlay = true;
+          request.flash(
+            "error",
+            "Entered Appointment is overlapping with existing Appointment"
+          );
+          return response.redirect(`/tasks/${allAppointments[i].id}`);
+        } else if (newStart <= checkEnd <= newEnd) {
+          overlay = true;
+          request.flash(
+            "error",
+            "Entered Appointment is overlapping with existing Appointment"
+          );
+          return response.redirect(`/tasks/${allAppointments[i].id}`);
+        } else if (checkStart <= newStart && newEnd <= checkEnd) {
+          overlay = true;
+          request.flash(
+            "error",
+            "Entered Appointment is overlapping with existing Appointment"
+          );
+          return response.redirect(`/tasks/${allAppointments[i].id}`);
+        } else if (newStart <= checkStart && newEnd >= checkEnd) {
+          overlay = true;
+          request.flash(
+            "error",
+            "Entered Appointment is overlapping with existing Appointment"
+          );
+          return response.redirect(`/tasks/${allAppointments[i].id}`);
+        }
       }
 
       await Appointment.override({
