@@ -28,7 +28,7 @@
         }
     </script>
 </head>
-<body>
+<body class="bg-gray-200" >
     <%- include('header.ejs') %> 
     <div class="relative mx-auto mb-8 w-fit">
         <% if(messages && messages.error && messages.error.length > 0)  { %>
@@ -61,7 +61,7 @@
                     <p class="text-2xl px-3 py-4">Your Appointments are:</p>
                     <% for(var i=0; i<allAppointments.length; i++) {%>
                       <div class="flex items-center  gap-2 ">
-                        <br> <a  class="px-3 py-3  hover:text-green-300">
+                        <br> <a  class="px-3 py-3 font-semibold text-xl">
                           <%= i+1 %> .<%=allAppointments[i].appointmentName %> <a class="bg-green-500 px-2 text-white rounded" >Start:</a>  <%= allAppointments[i].start.toLocaleString() %> - <a class="bg-red-500 px-2 text-white rounded" >End:</a> <%= allAppointments[i].end.toLocaleString() %>
                           </a> 
                           <div class="flex gap-4  items-center">
@@ -80,7 +80,7 @@
                      
                    <% } %>
                    <div>
-                 <br> <a href="appointment/new" class="underline text-green-400 text-2xl px-3 py-3 hover:text-green-600">Add More Appointments From Here</a>
+                 <br> <a href="appointment/new" class="underline text-green-400 text-2xl px-3 py-3 hover:text-green-600">--> Add More Appointments From Here</a>
                   <% } %> 
                   </div>
                    
