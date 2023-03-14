@@ -12,6 +12,7 @@ const session = require("express-session");
 const LocalStrategy = require("passport-local");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
+const moment = require("moment");
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser("shh! some secret string"));
@@ -20,6 +21,7 @@ const path = require("path");
 // eslint-disable-next-line no-undef
 app.use(express.static(path.join(__dirname, "public")));
 const flash = require("connect-flash");
+const { time } = require("console");
 // eslint-disable-next-line no-undef
 app.set("views", path.join(__dirname, "views"));
 app.use(flash());
@@ -235,6 +237,65 @@ app.post(
         start: startTime,
         end: endTime,
       });
+      obj = {};
+      let newStart = request.body.start;
+      let newEnd = request.body.end;
+      let startSec = new Date(newStart).getTime() / 1000;
+      let endSec = new Date(newEnd).getTime() / 1000;
+      console.log(startSec + "wekjndjwknenkdj");
+      //   obj['start']=newStart
+      //   obj['end']=newEnd
+      //  const overlapping = (oldtime,newtime)=> {
+      //   console.log( !moment(oldtime.end).isBefore(newtime.start) && !moment(oldtime.start).isAfter(newtime.end)+ "ghvhgvghvghvghcg");
+
+      //     return !moment(oldtime.end).isBefore(newtime.start) && !moment(oldtime.start).isAfter(newtime.end);
+      //   }
+      //  console.log(overlapping(allAppointments[0],allAppointments[0]) + "eyigdiwgeigdwgeg")
+      let overlay = false;
+      for (let i = 0; i < allAppointments.length; i++) {
+        console.log(allAppointments[0].start + "ebkhbdewbk");
+        let checkStart = new Date(allAppointments[i].start).getTime() / 1000;
+        let checkEnd = new Date(allAppointments[i].end).getTime() / 1000;
+        if (checkStart <= newStart <= checkEnd) {
+          overlay = true;
+          request.flash(
+            "error",
+            "Entered Appointment is overlapping with existing Appointment"
+          );
+          return response.redirect(`/tasks/${allAppointments[i].id}`);
+        } else if (newStart <= checkEnd <= newEnd) {
+          overlay = true;
+          request.flash(
+            "error",
+            "Entered Appointment is overlapping with existing Appointment"
+          );
+          return response.redirect(`/tasks/${allAppointments[i].id}`);
+        } else if (checkStart <= newStart && newEnd <= checkEnd) {
+          overlay = true;
+          request.flash(
+            "error",
+            "Entered Appointment is overlapping with existing Appointment"
+          );
+          return response.redirect(`/tasks/${allAppointments[i].id}`);
+        } else if (newStart <= checkStart && newEnd >= checkEnd) {
+          overlay = true;
+          request.flash(
+            "error",
+            "Entered Appointment is overlapping with existing Appointment"
+          );
+          return response.redirect(`/tasks/${allAppointments[i].id}`);
+        }
+
+        // if(isOverlap){
+        //   let overlaped=time.id;
+        //   request.flash(
+        //     "error",
+        //     "Two Appointments are overlapping,Edit the below appointment"
+        //   );
+        //   console.log(time.id + "wherfwbebkhwb")
+        //   return response.redirect(`/tasks/${time.id}`);
+        // }
+      }
 
       if (!alreadyOccupied) {
         const thisAppointment = await Appointment.addAppointment({
