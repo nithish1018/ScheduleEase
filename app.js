@@ -253,15 +253,25 @@ app.post(
       for (let i = 0; i < allAppointments.length; i++) {
         console.log(allAppointments[0].start + "ebkhbdewbk");
         let checkStart = new Date(allAppointments[i].start).getTime() / 1000;
+        console.log(checkStart + "hfbhcbdhf");
         let checkEnd = new Date(allAppointments[i].end).getTime() / 1000;
-        if (checkStart <= startSec <= checkEnd) {
+        // if (allAppointments[i].start <= request.body.start <= allAppointments[i].end) {
+        //   overlay = true;
+        //   request.flash(
+        //     "error",
+        //     "Entered Appointment is overlapping with existing Appointment"
+        //   );
+        //   return response.redirect(`/tasks/${allAppointments[i].id}`);
+        // }
+        if (checkStart <= startSec && startSec <= checkEnd) {
+          console.log(checkStart, startSec, checkEnd + "jojdiqnd");
           overlay = true;
           request.flash(
             "error",
             "Entered Appointment is overlapping with existing Appointment"
           );
           return response.redirect(`/tasks/${allAppointments[i].id}`);
-        } else if (startSec <= checkEnd <= endSec) {
+        } else if (startSec <= checkEnd && checkEnd <= endSec) {
           overlay = true;
           request.flash(
             "error",
@@ -353,6 +363,7 @@ app.post(
         start: startTime,
         end: endTime,
       });
+
       let newStart = request.body.start;
       let newEnd = request.body.end;
       let startSec = new Date(newStart).getTime() / 1000;
@@ -360,17 +371,27 @@ app.post(
       console.log(startSec + "wekjndjwknenkdj");
       let overlay = false;
       for (let i = 0; i < allAppointments.length; i++) {
+        console.log(allAppointments[0].start + "ebkhbdewbk");
         let checkStart = new Date(allAppointments[i].start).getTime() / 1000;
+        console.log(checkStart + "hfbhcbdhf");
         let checkEnd = new Date(allAppointments[i].end).getTime() / 1000;
-
-        if (checkStart <= startSec <= checkEnd) {
+        // if (allAppointments[i].start <= request.body.start <= allAppointments[i].end) {
+        //   overlay = true;
+        //   request.flash(
+        //     "error",
+        //     "Entered Appointment is overlapping with existing Appointment"
+        //   );
+        //   return response.redirect(`/tasks/${allAppointments[i].id}`);
+        // }
+        if (checkStart <= startSec && startSec <= checkEnd) {
+          console.log(checkStart, startSec, checkEnd + "jojdiqnd");
           overlay = true;
           request.flash(
             "error",
             "Entered Appointment is overlapping with existing Appointment"
           );
           return response.redirect(`/tasks/${allAppointments[i].id}`);
-        } else if (startSec <= checkEnd <= endSec) {
+        } else if (startSec <= checkEnd && checkEnd <= endSec) {
           overlay = true;
           request.flash(
             "error",
