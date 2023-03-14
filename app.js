@@ -278,6 +278,13 @@ app.post(
             "Entered Appointment is overlapping with existing Appointment"
           );
           return response.redirect(`/tasks/${allAppointments[i].id}`);
+        } else if (startSec <= checkStart && checkEnd >= endSec) {
+          overlay = true;
+          request.flash(
+            "error",
+            "Entered Appointment is overlapping with existing Appointment"
+          );
+          return response.redirect(`/tasks/${allAppointments[i].id}`);
         }
       }
 
