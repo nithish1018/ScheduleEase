@@ -248,10 +248,67 @@ app.post(
         console.log(alreadyOccupied + "shhhhhhhhhhhhhhhhhh");
         request.flash(
           "error",
-          "Two Appointments are overlapping, please choose different periods"
+          "Two Appointments are overlapping,Edit the below appointment"
         );
-        return response.redirect("/tasks");
+        request.flash("error", "And Update With New One");
+        return response.redirect(`/tasks/${alreadyOccupied.id}`);
       }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+app.get(
+  "/tasks/:id",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (request, response) => {
+    const userId = request.user.id;
+    const appointmentId = request.params.id;
+    const overlap = await Appointment.findAppointmentWithId(appointmentId);
+    return response.render("overlap", {
+      appointmentId,
+      appointmentName: overlap.appointmentName,
+      start: overlap.start,
+      end: overlap.end,
+      csrfToken: request.csrfToken(),
+    });
+  }
+);
+
+app.post(
+  "/tasks/:id/",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (request, response) => {
+    try {
+      const userId = request.user.id;
+      if (request.body.appointment.length < 5) {
+        request.flash("error", "Length of the Appointment Should be atleast 5");
+        return response.redirect(`/tasks/${request.params.id}`);
+      }
+      let startTime = request.body.start;
+      if (startTime == false) {
+        request.flash("error", "Please choose start time");
+        return response.redirect(`/tasks/${request.params.id}`);
+      }
+      let endTime = request.body.end;
+      if (endTime == false) {
+        request.flash("error", "Please choose end time");
+        return response.redirect(`/tasks/${request.params.id}`);
+      }
+      if (request.body.start > request.body.end) {
+        request.flash("error", "End time cannot be before Start time");
+        return response.redirect(`/tasks/${request.params.id}`);
+      }
+
+      await Appointment.override({
+        appointmentName: request.body.appointment,
+        start: request.body.start,
+        end: request.body.end,
+        id: request.params.id,
+        userId: userId,
+      });
+      request.flash("success", "Overrided Succesfully");
+      return response.redirect("/tasks");
     } catch (error) {
       console.log(error);
     }
@@ -393,5 +450,8 @@ app.post(
     }
   }
 );
+app.use(function (request, response) {
+  response.status(404).render("error");
+});
 // eslint-disable-next-line no-undef
 module.exports = app;

@@ -63,6 +63,21 @@ module.exports = (sequelize, DataTypes) => {
         }
       );
     }
+    static async override({ appointmentName, start, end, id, userId }) {
+      return this.update(
+        {
+          appointmentName: appointmentName,
+          start: start,
+          end: end,
+        },
+        {
+          where: {
+            id: id,
+            userId: userId,
+          },
+        }
+      );
+    }
 
     static addAppointment({ appointmentName, userId, start, end }) {
       return this.create({
