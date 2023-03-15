@@ -353,11 +353,21 @@ app.post(
         return response.redirect(`/tasks/${request.params.id}`);
       }
       let startTime = request.body.start;
+      let endTime = request.body.end;
+      let startSec = new Date(startTime).getTime() / 1000;
+      let now = new Date().getTime() / 1000;
+      if (startSec < now) {
+        request.flash(
+          "error",
+          "Sorry, You cannot schedule appointments in past time"
+        );
+        return response.redirect("/tasks");
+      }
+
       if (startTime == false) {
         request.flash("error", "Please choose start time");
         return response.redirect(`/tasks/${request.params.id}`);
       }
-      let endTime = request.body.end;
       if (endTime == false) {
         request.flash("error", "Please choose end time");
         return response.redirect(`/tasks/${request.params.id}`);
@@ -374,7 +384,7 @@ app.post(
 
       let newStart = request.body.start;
       let newEnd = request.body.end;
-      let startSec = new Date(newStart).getTime() / 1000;
+      startSec = new Date(newStart).getTime() / 1000;
       let endSec = new Date(newEnd).getTime() / 1000;
       console.log(startSec + "wekjndjwknenkdj");
       let overlay = false;
@@ -383,18 +393,6 @@ app.post(
         let checkStart = new Date(allAppointments[i].start).getTime() / 1000;
         console.log(checkStart + "hfbhcbdhf");
         let checkEnd = new Date(allAppointments[i].end).getTime() / 1000;
-        if (
-          allAppointments[i].start <=
-          request.body.start <=
-          allAppointments[i].end
-        ) {
-          overlay = true;
-          request.flash(
-            "error",
-            "Entered Appointment is overlapping with existing Appointment"
-          );
-          return response.redirect(`/tasks/${allAppointments[i].id}`);
-        }
         if (checkStart <= startSec && startSec <= checkEnd) {
           console.log(checkStart, startSec, checkEnd + "jojdiqnd");
           overlay = true;
