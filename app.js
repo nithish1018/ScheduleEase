@@ -361,7 +361,7 @@ app.post(
           "error",
           "Sorry, You cannot schedule appointments in past time"
         );
-        return response.redirect("/tasks");
+        return response.redirect(`/tasks/${request.params.id}`);
       }
 
       if (startTime == false) {
