@@ -8,8 +8,19 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <title> <%= title %> </title>
 </head>
-<body class="bg-gray-200" >
-    <%- include('header.ejs') %> 
+<body class="bg-blue-200" >
+    <header class="text-gray-600 body-font">
+        <div class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
+          <a class="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0">
+            <span class="ml-3 text-2xl px-3 py-3 font-bold text-2xl">ScheduleEase</span>
+          </a>
+          <nav class="md:ml-auto flex flex-wrap  gap-4 items-center text-base justify-center">
+            <a  class="text-xl bg-green-500 text-white rounded px-2" href="/home">Home </a>
+          <a class="text-xl bg-red-500 text-white rounded px-2" href="/signout">Logout</a>
+          <a class="text-xl bg-green-500 text-white rounded px-2" href="/user/passwordReset">Reset Password</a>
+          </nav>
+        </div>
+    </header>
     <div class="relative mx-auto mb-8 w-fit">
         <% if(messages && messages.error && messages.error.length > 0)  { %>
            <% for(var i=0; i<messages.error.length; i++) { %>
