@@ -216,15 +216,25 @@ app.post(
       return response.redirect("/tasks");
     }
     let startTime = request.body.start;
+    let endTime = request.body.end;
+    let startSec = new Date(startTime).getTime() / 1000;
+    let now = new Date().getTime() / 1000;
+    if (startSec < now) {
+      request.flash(
+        "error",
+        "Sorry, You cannot schedule appointments in past time"
+      );
+      return response.redirect("/tasks");
+    }
     if (startTime == false) {
       request.flash("error", "Please choose start time");
       return response.redirect("/tasks");
     }
-    let endTime = request.body.end;
     if (endTime == false) {
       request.flash("error", "Please choose end time");
       return response.redirect("/tasks");
     }
+
     if (endTime === startTime) {
       request.flash("error", "Start and End Time cannot be same");
       request.flash("error", "Please Try Again");
